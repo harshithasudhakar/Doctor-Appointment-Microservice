@@ -49,9 +49,11 @@ class ConcurrencyIntegrationTest {
         registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-        // Use update for test schema convenience
+        // For integration test, let Hibernate update/create tables and ensure Flyway targets Postgres migrations
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
         registry.add("spring.jpa.show-sql", () -> "false");
+        registry.add("spring.flyway.locations", () -> "classpath:db/migration/postgres");
+        registry.add("spring.flyway.enabled", () -> "true");
     }
 
     @Autowired
@@ -114,21 +116,18 @@ class ConcurrencyIntegrationTest {
         executor.submit(task1);
         executor.submit(task2);
 
-        // Wait until both threads are ready, then release them together
         assertTrue(ready.await(5, TimeUnit.SECONDS));
         startGate.countDown();
 
         executor.shutdown();
         assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
 
-        // Exactly one success and one conflict
         long successCount = results.stream().filter(r -> r instanceof Appointment).count();
         long conflictCount = results.stream().filter(r -> r instanceof SlotAlreadyBookedException).count();
 
         assertEquals(1, successCount, "Exactly one booking should succeed");
         assertEquals(1, conflictCount, "Exactly one booking should conflict");
 
-        // DB should have exactly one confirmed appointment for the slot
         List<Appointment> all = appointmentRepository.findAll();
         assertEquals(1, all.size());
         Appointment saved = all.get(0);
