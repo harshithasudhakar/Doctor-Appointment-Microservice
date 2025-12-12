@@ -1,0 +1,115 @@
+{
+  "info": {
+    "name": "Appointments Service",
+    "_postman_id": "c0f7f0a2-3ad7-4b2d-9e8e-appointments",
+    "description": "Postman collection for Doctor/Patient appointments microservice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Doctor",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/doctors",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "doctors"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Dr. House\",\n  \"specialization\": \"Diagnostics\",\n  \"contactEmail\": \"house@example.com\",\n  \"perSlotDurationMinutes\": 30\n}"
+        }
+      }
+    },
+    {
+      "name": "List Doctors (all)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/doctors",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "doctors"]
+        }
+      }
+    },
+    {
+      "name": "List Doctors (filter by specialization)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/doctors?specialization=Diagnostics",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "doctors"],
+          "query": [
+            {
+              "key": "specialization",
+              "value": "Diagnostics"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Doctor Availability",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/doctors/1/availability?date=2025-12-31",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "doctors", "1", "availability"],
+          "query": [
+            {
+              "key": "date",
+              "value": "2025-12-31"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Book Appointment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/appointments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "appointments"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"doctorId\": 1,\n  \"patientName\": \"John Doe\",\n  \"startTime\": \"2025-12-31T10:00:00\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Cancel Appointment",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "{{baseUrl}}/api/appointments/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "appointments", "1"]
+        }
+      }
+    }
+  ]
+}

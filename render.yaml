@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: appointments-service
+    env: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: DATABASE_URL
+        fromDatabase:
+          name: appointments-db
+          property: connectionString
+      - key: DB_USER
+        fromDatabase:
+          name: appointments-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: appointments-db
+          property: password
+      - key: SERVER_PORT
+        value: "10000"
+    healthCheckPath: /actuator/health
+
+databases:
+  - name: appointments-db
+    plan: free
