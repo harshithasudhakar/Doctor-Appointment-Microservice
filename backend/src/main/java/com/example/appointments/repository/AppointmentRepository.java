@@ -18,7 +18,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         LocalDateTime endInclusive
     );
 
-    boolean existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+    boolean existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
         Doctor doctor,
         AppointmentStatus status,
         LocalDateTime endExclusive,
@@ -27,7 +27,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findByDoctorAndStartTime(Doctor doctor, LocalDateTime startTime);
 
-    List<Appointment> findByDoctorAndStatusAndEndTimeGreaterAndStartTimeLess(
+    List<Appointment> findByDoctorAndStatusAndEndTimeGreaterThanAndStartTimeLessThan(
         Doctor doctor,
         AppointmentStatus status,
         LocalDateTime startExclusive,
