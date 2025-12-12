@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 
 /**
  * Custom DataSource configuration for the 'postgres' profile to make Render Blueprints easier.
- * It constructs a JDBC URL from DATABASE_URL (postgres://...), or falls back to SPRING_DATASOURCE_URL if provided.
- * Username/password are taken from DB_USER/DB_PASSWORD or SPRING_DATASOURCE_USERNAME/SPRING_DATASOURCE_PASSWORD.
+ * It constructs a JDBC URL from DATABASE_URL (postgres://...) or reads spring.datasource.url/SPRING_DATASOURCE_URL.
+ * Username/password are taken from spring.datasource.username/SPRING_DATASOURCE_USERNAME or DB_USER/DB_PASSWORD.
  */
 @Configuration
 @Profile("postgres")
@@ -19,15 +19,27 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource(Environment env) {
-        String jdbcUrl = env.getProperty("SPRING_DATASOURCE_URL");
-        String databaseUrl = env.getProperty("DATABASE_URL");
+        // Read both Spring-style keys and env-style keys to be compatible in tests and production
+        String jdbcUrl = firstNonBlank(
+                env.getProperty("spring.datasource.url"),
+                env.getProperty("SPRING_DATASOURCE_URL")
+        );
+
+        String databaseUrl = firstNonBlank(
+                env.getProperty("DATABASE_URL"),
+                env.getProperty("database.url")
+        );
+
         String user = firstNonBlank(
+                env.getProperty("spring.datasource.username"),
                 env.getProperty("SPRING_DATASOURCE_USERNAME"),
                 env.getProperty("DB_USER"),
                 env.getProperty("DATABASE_USER"),
                 env.getProperty("POSTGRES_USER")
         );
+
         String password = firstNonBlank(
+                env.getProperty("spring.datasource.password"),
                 env.getProperty("SPRING_DATASOURCE_PASSWORD"),
                 env.getProperty("DB_PASSWORD"),
                 env.getProperty("DATABASE_PASSWORD"),
@@ -40,10 +52,10 @@ public class DataSourceConfig {
         }
 
         if (jdbcUrl == null || jdbcUrl.isBlank()) {
-            throw new IllegalStateException("No datasource URL configured. Provide SPRING_DATASOURCE_URL or DATABASE_URL.");
+            throw new IllegalStateException("No datasource URL configured. Provide spring.datasource.url or DATABASE_URL.");
         }
         if (user == null || user.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalStateException("No datasource credentials configured. Provide DB_USER/DB_PASSWORD or SPRING_DATASOURCE_USERNAME/SPRING_DATASOURCE_PASSWORD.");
+            throw new IllegalStateException("No datasource credentials configured. Provide spring.datasource.username/password or DB_USER/DB_PASSWORD.");
         }
 
         HikariDataSource ds = new HikariDataSource();

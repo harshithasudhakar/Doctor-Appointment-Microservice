@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @Testcontainers
 @SpringBootTest
+@ActiveProfiles("postgres")
 @ExtendWith(org.testcontainers.junit.jupiter.TestcontainersExtension.class)
 class ConcurrencyIntegrationTest {
 
@@ -45,11 +47,12 @@ class ConcurrencyIntegrationTest {
 
     @DynamicPropertySource
     static void registerProps(DynamicPropertyRegistry registry) {
+        // Provide properties using Spring-style keys so our DataSourceConfig can read them
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-        // For integration test, let Hibernate update/create tables and ensure Flyway targets Postgres migrations
+        // Let Hibernate manage schema for the test and ensure Flyway points to Postgres migrations
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
         registry.add("spring.jpa.show-sql", () -> "false");
         registry.add("spring.flyway.locations", () -> "classpath:db/migration/postgres");
