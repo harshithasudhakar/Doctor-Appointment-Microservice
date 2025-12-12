@@ -65,7 +65,7 @@ class DoctorServiceAvailabilityTest {
         a2.setStatus(AppointmentStatus.CONFIRMED);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.findByDoctorAndStatusAndEndTimeGreaterAndStartTimeLess(
+        when(appointmentRepository.findByDoctorAndStatusAndEndTimeGreaterThanAndStartTimeLessThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(dayStart), eq(dayEnd)
         )).thenReturn(List.of(a1, a2));
 
@@ -89,7 +89,7 @@ class DoctorServiceAvailabilityTest {
         LocalDateTime dayEnd = date.atTime(12, 0);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.findByDoctorAndStatusAndEndTimeGreaterAndStartTimeLess(
+        when(appointmentRepository.findByDoctorAndStatusAndEndTimeGreaterThanAndStartTimeLessThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(dayStart), eq(dayEnd)
         )).thenReturn(List.of());
 

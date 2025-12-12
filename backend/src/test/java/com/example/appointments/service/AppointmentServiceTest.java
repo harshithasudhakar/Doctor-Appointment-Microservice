@@ -55,7 +55,7 @@ class AppointmentServiceTest {
         CreateAppointmentRequest req = new CreateAppointmentRequest(1L, "John Doe", start);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(start.plusMinutes(30)), eq(start)
         )).thenReturn(false);
         when(appointmentRepository.findByDoctorAndStartTime(eq(doctor), eq(start))).thenReturn(Optional.empty());
@@ -82,7 +82,7 @@ class AppointmentServiceTest {
         CreateAppointmentRequest req = new CreateAppointmentRequest(1L, "John Doe", start);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(start.plusMinutes(30)), eq(start)
         )).thenReturn(true);
 
@@ -96,7 +96,7 @@ class AppointmentServiceTest {
         CreateAppointmentRequest req = new CreateAppointmentRequest(1L, "Jane Doe", start);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(start.plusMinutes(30)), eq(start)
         )).thenReturn(false);
         when(appointmentRepository.findByDoctorAndStartTime(eq(doctor), eq(start))).thenReturn(Optional.empty());
@@ -116,7 +116,7 @@ class AppointmentServiceTest {
         existing.setId(200L);
 
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+        when(appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
                 eq(doctor), eq(AppointmentStatus.CONFIRMED), eq(start.plusMinutes(30)), eq(start)
         )).thenReturn(false);
         when(appointmentRepository.findByDoctorAndStartTime(eq(doctor), eq(start))).thenReturn(Optional.of(existing));

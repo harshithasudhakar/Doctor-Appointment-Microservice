@@ -17,6 +17,7 @@
     <java.version>17</java.version>
     <spring-boot.version>3.3.5</spring-boot.version>
     <testcontainers.version>1.20.0</testcontainers.version>
+    <flyway.version>10.15.0</flyway.version>
   </properties>
 
   <dependencyManagement>
@@ -54,6 +55,13 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
+      <version>${flyway.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <version>${flyway.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- Actuator for health checks -->

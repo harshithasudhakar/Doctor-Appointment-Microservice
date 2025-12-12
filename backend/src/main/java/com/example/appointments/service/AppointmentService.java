@@ -42,7 +42,7 @@ public class AppointmentService {
         LocalDateTime end = start.plusMinutes(minutes);
 
         // Optional overlap check for non-slot-aligned requests
-        boolean overlapExists = appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreater(
+        boolean overlapExists = appointmentRepository.existsByDoctorAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
                 doctor,
                 AppointmentStatus.CONFIRMED,
                 end,

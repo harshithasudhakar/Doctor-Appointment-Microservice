@@ -69,7 +69,7 @@ public class DoctorService {
 
         // Load all appointments overlapping the working window
         List<Appointment> busy = appointmentRepository
-            .findByDoctorAndStatusAndEndTimeGreaterAndStartTimeLess(
+            .findByDoctorAndStatusAndEndTimeGreaterThanAndStartTimeLessThan(
                 doctor,
                 AppointmentStatus.CONFIRMED,
                 dayStart,
