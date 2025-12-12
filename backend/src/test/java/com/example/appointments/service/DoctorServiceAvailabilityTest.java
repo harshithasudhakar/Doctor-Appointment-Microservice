@@ -72,15 +72,13 @@ class DoctorServiceAvailabilityTest {
         List<String> slots = doctorService.getAvailability(1L, date);
 
         // Expected available starts: 09:00, 09:30, 10:30, 11:30
-        assertTrue(slots.contains(dayStart.toString()));
-        assertTrue(slots.contains(dayStart.plusMinutes(30).toString()));
-        assertTrue(slots.contains(dayStart.plusMinutes(90).toString()) == false); // 10:30 present? check explicitly below
-        assertTrue(slots.contains(dayStart.plusHours(1).toString()) == false); // 10:00 blocked
-        assertTrue(slots.contains(dayStart.plusHours(2).toString()) == false); // 11:00 blocked
+        assertTrue(slots.contains(dayStart.toString())); // 09:00
+        assertTrue(slots.contains(dayStart.plusMinutes(30).toString())); // 09:30
+        assertFalse(slots.contains(dayStart.plusHours(1).toString())); // 10:00 blocked
         assertTrue(slots.contains(dayStart.plusHours(1).plusMinutes(30).toString())); // 10:30 available
+        assertFalse(slots.contains(dayStart.plusHours(2).toString())); // 11:00 blocked
         assertTrue(slots.contains(dayStart.plusHours(2).plusMinutes(30).toString())); // 11:30 available
 
-        // Ensure total count equals 4 (09:00, 09:30, 10:30, 11:30)
         assertEquals(4, slots.size());
     }
 
