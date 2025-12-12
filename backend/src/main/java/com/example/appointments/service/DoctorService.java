@@ -81,12 +81,15 @@ public class DoctorService {
         LocalDateTime cursor = dayStart;
 
         while (!cursor.plusMinutes(slotMinutes).isAfter(dayEnd)) {
-            LocalDateTime candidateEnd = cursor.plusMinutes(slotMinutes);
+            // Use effectively-final locals inside the lambda to satisfy Java requirements
+            final LocalDateTime slotStart = cursor;
+            final LocalDateTime slotEnd = slotStart.plusMinutes(slotMinutes);
+
             boolean conflicts = busy.stream().anyMatch(a ->
-                a.getStartTime().isBefore(candidateEnd) && a.getEndTime().isAfter(cursor)
+                a.getStartTime().isBefore(slotEnd) && a.getEndTime().isAfter(slotStart)
             );
             if (!conflicts) {
-                available.add(cursor.toString()); // ISO-8601 (e.g., 2025-12-31T10:00)
+                available.add(slotStart.toString()); // ISO-8601 (e.g., 2025-12-31T10:00)
             }
             cursor = cursor.plusMinutes(slotMinutes);
         }
